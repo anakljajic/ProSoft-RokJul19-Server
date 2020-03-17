@@ -178,6 +178,7 @@ public class Storage {
 
     //SELECT CONCAT(p.Ime,' ', p.Prezime) AS 'Gazdinstvo', g.DatumRegistracije AS 'Datum registracije', s.IznosSubvencije  AS 'UkupnoSubvencije', s.BrojGrla AS 'Broj grla', z.Naziv AS 'Stado' FROM poljoprivrednik p JOIN gazdinstvo g ON (p.PoljoprivrednikID=g.PoljoprivrednikID) JOIN stado s ON (g.GazdinstvoID=s.GazdinstvoID) JOIN zivotinja z ON (s.ZivotinjaID=z.ZivotinjaID)
     public List<Izvestaj> getAllIzvestaj() throws Exception {
+        izvestaji.clear();
         try {
             String upit = "SELECT CONCAT(p.Ime,' ', p.Prezime) AS 'Gazdinstvo', g.DatumRegistracije AS 'DatumRegistracije', s.IznosSubvencije  AS 'UkupnoSubvencije', s.BrojGrla AS 'BrojGrla', z.Naziv AS 'Stado' FROM poljoprivrednik p JOIN gazdinstvo g ON (p.PoljoprivrednikID=g.PoljoprivrednikID) JOIN stado s ON (g.GazdinstvoID=s.GazdinstvoID) JOIN zivotinja z ON (s.ZivotinjaID=z.ZivotinjaID)";
             System.out.println(upit);

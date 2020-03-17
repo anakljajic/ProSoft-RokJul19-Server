@@ -6,10 +6,13 @@
 package view;
 
 import controller.Controller;
+import domain.Izvestaj;
 import domain.Zivotinja;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import threads.KlijentThread;
 import threads.ServerThread;
 
 /**
@@ -19,12 +22,17 @@ import threads.ServerThread;
 public class FrmServer extends javax.swing.JFrame {
 
     private ServerThread serverThread;
+    private KlijentThread kt;
+    private TableModelServer tms;
+    private List<Izvestaj> izvestaji;
 
     /**
      * Creates new form FrmServer
      */
     public FrmServer() {
         initComponents();
+        izvestaji = new ArrayList<>();
+        tms = new TableModelServer(izvestaji);
         setLocationRelativeTo(null);
         prepareView();
         startServer();
@@ -42,13 +50,13 @@ public class FrmServer extends javax.swing.JFrame {
         checkFilterZivotinje = new javax.swing.JCheckBox();
         cmbZivotinja = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblServer = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         checkFilterZivotinje.setText("Filter po vrsti zivotinje");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblServer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -59,7 +67,7 @@ public class FrmServer extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblServer);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,10 +105,11 @@ public class FrmServer extends javax.swing.JFrame {
     private javax.swing.JCheckBox checkFilterZivotinje;
     private javax.swing.JComboBox<Object> cmbZivotinja;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblServer;
     // End of variables declaration//GEN-END:variables
 
     private void prepareView() {
+        tblServer.setModel(tms);
         try {
             List<Zivotinja> zivotinje = Controller.getInstance().getAllZivotinje();
             for (Zivotinja zivotinja : zivotinje) {
@@ -115,7 +124,9 @@ public class FrmServer extends javax.swing.JFrame {
         if (serverThread == null || !serverThread.isAlive()) {
             try {
                 serverThread = new ServerThread();
+                kt = new KlijentThread(tms);
                 serverThread.start();
+                kt.start();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
