@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import threads.KlijentThread;
 import threads.ServerThread;
 
@@ -55,6 +56,11 @@ public class FrmServer extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         checkFilterZivotinje.setText("Filter po vrsti zivotinje");
+        checkFilterZivotinje.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkFilterZivotinjeActionPerformed(evt);
+            }
+        });
 
         tblServer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -100,6 +106,16 @@ public class FrmServer extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void checkFilterZivotinjeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkFilterZivotinjeActionPerformed
+        try {
+            Zivotinja z = (Zivotinja) cmbZivotinja.getSelectedItem();
+            izvestaji = Controller.getInstance().getAllIzvestajiSaFilterom(z.getNaziv());
+            tms.azuriraj(izvestaji);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_checkFilterZivotinjeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox checkFilterZivotinje;
@@ -124,7 +140,7 @@ public class FrmServer extends javax.swing.JFrame {
         if (serverThread == null || !serverThread.isAlive()) {
             try {
                 serverThread = new ServerThread();
-                kt = new KlijentThread(tms);
+                kt = new KlijentThread(tms, checkFilterZivotinje);
                 serverThread.start();
                 kt.start();
             } catch (Exception ex) {

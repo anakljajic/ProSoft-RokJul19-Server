@@ -154,16 +154,20 @@ public class Controller {
         }
         return stada;
     }
-    
-    public int vratiBrojStada(String gazdinstvo) throws Exception{
-        int brojac =0;
+
+    public int vratiBrojStada(String gazdinstvo) throws Exception {
+        int brojac = 0;
         List<Izvestaj> izvestaji = getAllIzvestaj();
         for (Izvestaj izvestaj : izvestaji) {
-            if(izvestaj.getGazdinstvo().equalsIgnoreCase(gazdinstvo)){
+            if (izvestaj.getGazdinstvo().equalsIgnoreCase(gazdinstvo)) {
                 brojac++;
             }
         }
         return brojac;
+    }
+
+    public List<Izvestaj> getAllIzvestajiSaFilterom(String naziv) throws Exception {
+        return storage.getAllIzvestajSaFilterom(naziv);
     }
 
 }

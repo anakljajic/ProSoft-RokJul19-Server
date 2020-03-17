@@ -9,6 +9,7 @@ import domain.Izvestaj;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import view.TableModelServer;
 
 /**
@@ -16,14 +17,16 @@ import view.TableModelServer;
  * @author anakl
  */
 public class KlijentThread extends Thread {
-
+    
     private boolean signal = true;
     private TableModelServer tms;
-
-    public KlijentThread(TableModelServer tms) {
+    private JCheckBox check;
+    
+    public KlijentThread(TableModelServer tms, JCheckBox check) {
         this.tms = tms;
+        this.check = check;
     }
-
+    
     @Override
     public void run() {
         while (signal) {
@@ -32,6 +35,7 @@ public class KlijentThread extends Thread {
                 System.out.println("Okinula nit.................");
                 List<Izvestaj> izvestaji = controller.Controller.getInstance().vratiDopunjeneIzvestaje();
                 tms.azuriraj(izvestaji);
+                check.setSelected(false);
             } catch (InterruptedException ex) {
                 signal = false;
             } catch (Exception ex) {
@@ -39,5 +43,5 @@ public class KlijentThread extends Thread {
             }
         }
     }
-
+    
 }

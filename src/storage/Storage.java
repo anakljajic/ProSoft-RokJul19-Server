@@ -203,5 +203,33 @@ public class Storage {
             throw new Exception();
         }
     }
+    
+    public List<Izvestaj> getAllIzvestajSaFilterom(String naziv) throws Exception {
+        izvestaji.clear();
+        try {
+            String upit = "SELECT CONCAT(p.Ime,' ', p.Prezime) AS 'Gazdinstvo', g.DatumRegistracije AS 'DatumRegistracije', s.IznosSubvencije  AS 'UkupnoSubvencije', s.BrojGrla AS 'BrojGrla', z.Naziv AS 'Stado' FROM poljoprivrednik p JOIN gazdinstvo g ON (p.PoljoprivrednikID=g.PoljoprivrednikID) JOIN stado s ON (g.GazdinstvoID=s.GazdinstvoID) JOIN zivotinja z ON (s.ZivotinjaID=z.ZivotinjaID) WHERE z.Naziv LIKE '%"+naziv+"%'";
+            System.out.println(upit);
+
+            Statement statement = ConnectionFactory.getInstance().getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(upit);
+
+            while (rs.next()) {
+                Izvestaj i = new Izvestaj();
+                i.setGazdinstvo(rs.getString("Gazdinstvo"));
+                i.setDatumRegistracije(new Date(rs.getDate("DatumRegistracije").getTime()));
+                i.setUkupnoSubvencija(rs.getBigDecimal("UkupnoSubvencije"));
+                i.setBrojGrla(rs.getLong("BrojGrla"));
+                i.setStado(rs.getString("Stado"));
+                izvestaji.add(i);
+            }
+            rs.close();
+            statement.close();
+            return izvestaji;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception();
+        }
+    }
+
 
 }
